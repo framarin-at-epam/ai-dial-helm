@@ -5,6 +5,7 @@ bin/*
 .project
 /.bin
 /_test/secrets/*.json
+logs/
 
 # OSX leaves these everywhere on SMB shares
 ._*
