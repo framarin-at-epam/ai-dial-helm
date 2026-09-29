@@ -17,11 +17,12 @@ core:
     aidial.config.json: |
       {
         "models": {
-          "gpt-chat-latest": {
+          "gpt-4.1-nano": {
             "type": "chat",
             "displayName": "GPT Chat Latest",
             "iconUrl": "gpt4.svg",
-            "endpoint": "http://dial-openai.dial.svc.cluster.local/openai/deployments/gpt-chat-latest/chat/completions",
+            "endpoint": ",
+            "overrideName": "upstream-model-name",
             "upstreams": [
               {
                 "endpoint": "https://FoundryImageRecognitionDev.services.ai.azure.com/openai/v1/chat/completions",
@@ -40,7 +41,7 @@ core:
         "roles": {
           "chat": {
             "limits": {
-              "gpt-chat-latest": {}
+              "gpt-4.1-nano": {}
             }
           }
         }
@@ -91,7 +92,8 @@ chat:
     # -- External or Internal URL of DIAL themes;
     # Same allowlist as for DIAL chat should be applied
     THEMES_CONFIG_HOST: "http://dial-themes.dial.svc.cluster.local"
-    DEFAULT_MODEL: "gpt-chat-latest"
+    #DEFAULT_MODEL: "gpt-chat-latest"
+    DEFAULT_MODEL: "gpt-4.1-nano"
   secrets:
     NEXTAUTH_SECRET: "YTR8BcAAOlxy56j9+GdzEF5g1brZ0oZ1+jzoF1uYLBHBQQIrlOzpp4yyUCAB2/+No5gJRwVALKG6PLIqIqPCrg==" #"%%NEXTAUTH_SECRET%%"
     # -- API key defined in core configuration
@@ -116,3 +118,5 @@ openai:
 
   env:
     DIAL_URL: "http://dial-core.dial.svc.cluster.local"
+
+# "endpoint": "http://dial-openai.dial.svc.cluster.local/openai/deployments/gpt-chat-latest/chat/completions",
