@@ -21,8 +21,7 @@ core:
             "type": "chat",
             "displayName": "GPT Chat Latest",
             "iconUrl": "gpt4.svg",
-            "endpoint": ",
-            "overrideName": "upstream-model-name",
+            "endpoint": "https://foundryimagerecognitiondev.cognitiveservices.azure.com/openai/deployments/gpt-4.1-nano/chat/completions",
             "upstreams": [
               {
                 "endpoint": "https://foundryimagerecognitiondev.cognitiveservices.azure.com/openai/deployments/gpt-4.1-nano/chat/completions?api-version=2025-01-01-preview",
@@ -82,7 +81,7 @@ chat:
   env:
     # -- Canonical URL of your site
     # ref: https://next-auth.js.org/configuration/options#nextauth_url
-    NEXTAUTH_URL: "https://chat.localhost" #'%%DOMAIN%%'
+    NEXTAUTH_URL: "http://chat.localhost" #'%%DOMAIN%%'
     # -- DIAL core API endpoint
     # Internal service name (DNS name) of DIAL core service
     DIAL_API_HOST: "http://dial-core.dial.svc.cluster.local"
@@ -120,3 +119,5 @@ openai:
     DIAL_URL: "http://dial-core.dial.svc.cluster.local"
 
 # "endpoint": "http://dial-openai.dial.svc.cluster.local/openai/deployments/gpt-chat-latest/chat/completions",
+# "responsesEndpoint": "https://foundryimagerecognitiondev.openai.azure.com/openai/v1/responses",
+# "overrideName": "upstream-model-name",
