@@ -25,7 +25,7 @@ core:
             "overrideName": "upstream-model-name",
             "upstreams": [
               {
-                "endpoint": "https://FoundryImageRecognitionDev.services.ai.azure.com/openai/v1/chat/completions",
+                "endpoint": "https://foundryimagerecognitiondev.cognitiveservices.azure.com/openai/deployments/gpt-4.1-nano/chat/completions?api-version=2025-01-01-preview",
                 "responsesEndpoint": "https://foundryimagerecognitiondev.openai.azure.com/openai/v1/responses",
                 "key": "<azure-openai-key>",
               }
