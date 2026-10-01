@@ -1,5 +1,9 @@
 core:
   enabled: true
+  image:
+    repository: ai-dial-core
+    tag: local
+    pullPolicy: Never
   podAnnotations:
     # -- Annotation hack to restart core pod after each Helm chart upgrade
     autorestart: '{{ dateInZone "2006-01-02 15:04:05Z" (now) "UTC" }}'
@@ -19,28 +23,49 @@ core:
         "models": {
           "gpt-4.1-nano": {
             "type": "chat",
-            "displayName": "GPT Chat Latest",
+            "displayName": "Azure Foundry gpt-4.1-nano",
             "iconUrl": "gpt4.svg",
             "endpoint": "https://foundryimagerecognitiondev.cognitiveservices.azure.com/openai/deployments/gpt-4.1-nano/chat/completions",
             "upstreams": [
               {
                 "endpoint": "https://foundryimagerecognitiondev.cognitiveservices.azure.com/openai/deployments/gpt-4.1-nano/chat/completions?api-version=2025-01-01-preview",
-                "responsesEndpoint": "https://foundryimagerecognitiondev.openai.azure.com/openai/v1/responses",
-                "key": "<azure-openai-key>",
+                "key": "<azure_foundry_api_key>"
+              }
+            ],
+            "userRoles": ["default", "chat"]
+          },
+          "gemma2:2b": {
+            "type": "chat",
+            "displayName": "Local gemma2:2b",
+            "endpoint": "http://localhost:11434/api/chat",
+            "iconUrl": "http://localhost:3001/gpt3.svg",
+            "upstreams": [
+              {
+                  "endpoint": "http://localhost:11434/api/chat",
+                  "key": "<GEMMA_MODEL_API_KEY>"
               }
             ]
           }
         },
         "keys": {
-          "TqACPv6bL5RzW2TftZg7j90zqW2jg24dahPamDQXU1Bkk9S7pB6gW3N0pYp2X5ZR": {
-            "role": "chat",
-            "project": "example"
+          "dial_api_key": {
+            "project": "TEST-PROJECT",
+            "role": "default",
+            "key": "dial_api_key"
+          },
+          "azure_foundry_api_key": {
+            "project": "TEST-PROJECT",
+            "role": "default",
+            "key": "<azure_foundry_api_key>"
           }
         },
         "roles": {
           "chat": {
             "limits": {
-              "gpt-4.1-nano": {}
+              "gpt-4.1-nano": {
+                "minute": "100000",
+                "day": "10000000"
+              }
             }
           }
         }
@@ -81,7 +106,8 @@ chat:
   env:
     # -- Canonical URL of your site
     # ref: https://next-auth.js.org/configuration/options#nextauth_url
-    NEXTAUTH_URL: "http://chat.localhost" #'%%DOMAIN%%'
+    # Browser access is via the forwarded localhost port, while service-to-service communication stays on the cluster DNS.
+    NEXTAUTH_URL: "http://localhost:3000" #'%%DOMAIN%%'
     # -- DIAL core API endpoint
     # Internal service name (DNS name) of DIAL core service
     DIAL_API_HOST: "http://dial-core.dial.svc.cluster.local"
@@ -111,6 +137,17 @@ chat:
 
 themes:
   enabled: true
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "" #"%%CLUSTER_ISSUER%%"
+    hosts:
+      - themes.localhost #'%%DOMAIN%%'
+    tls:
+      - secretName: "themes-tls-secret"
+        hosts:
+          - themes.localhost #'%%DOMAIN%%'
 
 openai:
   enabled: true
