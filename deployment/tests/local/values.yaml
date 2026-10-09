@@ -168,6 +168,36 @@ openai:
   env:
     DIAL_URL: "http://dial-core.dial.svc.cluster.local"
 
+ollama:
+  enabled: true
+  image:
+    repository: ollama/ollama
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 11434
+  model:
+    enabled: true
+    name: gemma2:2b
+  persistence:
+    enabled: true
+    size: 20Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+  podSecurityContext:
+    fsGroup: 1001
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    runAsNonRoot: true
+    runAsUser: 1001
+
 # "endpoint": "http://dial-openai.dial.svc.cluster.local/openai/deployments/gpt-chat-latest/chat/completions",
 # "responsesEndpoint": "https://foundryimagerecognitiondev.openai.azure.com/openai/v1/responses",
 # "overrideName": "upstream-model-name",

@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-ollama
+  labels:
+    app.kubernetes.io/name: ollama
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ollama
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ollama
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{- $podSecurityContext := deepCopy .Values.podSecurityContext }}
+      {{- $containerSecurityContext := deepCopy .Values.containerSecurityContext }}
+      {{- $adaptSecurityContext := "" }}
+      {{- if and .Values.global .Values.global.compatibility .Values.global.compatibility.openshift }}
+      {{- $adaptSecurityContext = .Values.global.compatibility.openshift.adaptSecurityContext | default "" }}
+      {{- end }}
+      {{- if or (eq $adaptSecurityContext "force") (and (eq $adaptSecurityContext "auto") (.Capabilities.APIVersions.Has "security.openshift.io/v1")) }}
+      {{- $podSecurityContext = omit $podSecurityContext "fsGroup" "runAsUser" "runAsGroup" }}
+      {{- $containerSecurityContext = omit $containerSecurityContext "runAsUser" "runAsGroup" }}
+      {{- end }}
+      {{- with $podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: ollama
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 11434
+          env:
+            - name: OLLAMA_HOST
+              value: 0.0.0.0:11434
+          {{- with $containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          resources:
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.resources.limits.cpu }}
+              memory: {{ .Values.resources.limits.memory }}
+          volumeMounts:
+            - name: ollama-data
+              mountPath: /root/.ollama
+      volumes:
+        - name: ollama-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-ollama-data
