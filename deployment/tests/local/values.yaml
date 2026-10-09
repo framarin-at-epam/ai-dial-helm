@@ -14,18 +14,6 @@ core:
   podAnnotations:
     # -- Annotation hack to restart core pod after each Helm chart upgrade
     autorestart: '{{ dateInZone "2006-01-02 15:04:05Z" (now) "UTC" }}'
-  podSecurityContext:
-    enabled: true
-    fsGroup: 1001
-  containerSecurityContext:
-    enabled: true
-    runAsUser: 1001
-    runAsGroup: 1001
-    runAsNonRoot: true
-    allowPrivilegeEscalation: false
-    readOnlyRootFilesystem: false
-    capabilities:
-      drop: ["ALL"]
   configuration:
     encryption:
       secret: "KgmCRB622TJgSJKS7HJgdUM3WuNgs0W4" #"%%CORE_ENCRYPT_SECRET%%"
