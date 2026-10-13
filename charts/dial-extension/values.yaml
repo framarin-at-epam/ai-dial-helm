@@ -49,7 +49,7 @@ image:
   pullSecrets: []
     # - myRegistryKeySecretName
 
-# -- Number of dial-extension replicas to deploy
+# -- Number of dial-extension replicas to deploy. Leave unset to allow an external operator to manage .spec.replicas.
 replicaCount: 1
 
 containerPorts:
@@ -131,8 +131,6 @@ podSecurityContext:
   sysctls: []
   # -- Set filesystem extra groups
   supplementalGroups: []
-  # -- Set dial-extension pod's Security Context fsGroup
-  fsGroup: 1001
 
 # -- Container Security Context Configuration
 # @default -- [Documentation](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container)
@@ -141,10 +139,6 @@ containerSecurityContext:
   enabled: true
   # -- Set dial-extension SELinux options in container
   seLinuxOptions: {}
-  # -- Set dial-extension container's Security Context runAsUser
-  runAsUser: 1001
-  # -- Set dial-extension container's Security Context runAsGroup
-  runAsGroup: 1001
   # -- Set dial-extension containers' Security Context runAsNonRoot
   runAsNonRoot: true
   # -- Set dial-extension container's Security Context privileged
