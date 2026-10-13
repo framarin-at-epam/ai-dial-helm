@@ -3,7 +3,8 @@ global:
     openshift:
       adaptSecurityContext: auto
 
-replicaCount: 1
+# Leave unset to allow external operators to manage .spec.replicas.
+replicaCount: null
 
 image:
   repository: ollama/ollama
@@ -28,6 +29,9 @@ persistence:
 model:
   name: gemma2:2b
   enabled: true
+  # Set to true to wait for the Ollama API before pulling the model.
+  # Default is false so DIAL services can start even while Ollama is still warming up.
+  waitForService: false
 
 resources:
   requests:
@@ -38,7 +42,6 @@ resources:
     memory: 4Gi
 
 podSecurityContext:
-  fsGroup: 1001
   runAsNonRoot: true
   seccompProfile:
     type: RuntimeDefault
@@ -49,4 +52,3 @@ containerSecurityContext:
     drop:
       - ALL
   runAsNonRoot: true
-  runAsUser: 1001

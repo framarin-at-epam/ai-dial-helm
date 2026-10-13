@@ -6,6 +6,9 @@ metadata:
   labels:
     app.kubernetes.io/name: ollama
     app.kubernetes.io/instance: {{ .Release.Name }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
   backoffLimit: 3
   template:
@@ -37,21 +40,27 @@ spec:
             - /bin/sh
             - -c
             - |
+              {{- if .Values.model.waitForService }}
               until curl -sf http://{{ .Release.Name }}-ollama:{{ .Values.service.port }}/api/version >/dev/null 2>&1; do
                 echo "Waiting for Ollama API..."
                 sleep 5
               done
-              ollama pull {{ .Values.model.name }}
+              {{- end }}
+              ollama pull {{ .Values.model.name }} || echo "Ollama is not ready yet; continuing without blocking DIAL startup"
           env:
             - name: OLLAMA_HOST
               value: 0.0.0.0:11434
+            - name: OLLAMA_HOME
+              value: /tmp/ollama
+            - name: OLLAMA_MODELS
+              value: /tmp/ollama/models
           {{- with $containerSecurityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
             - name: ollama-data
-              mountPath: /root/.ollama
+              mountPath: /tmp/ollama
       volumes:
         - name: ollama-data
           persistentVolumeClaim:

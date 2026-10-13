@@ -6,7 +6,9 @@ metadata:
     app.kubernetes.io/name: ollama
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
+  {{- if ne .Values.replicaCount nil }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/name: ollama
@@ -41,6 +43,10 @@ spec:
           env:
             - name: OLLAMA_HOST
               value: 0.0.0.0:11434
+            - name: OLLAMA_HOME
+              value: /tmp/ollama
+            - name: OLLAMA_MODELS
+              value: /tmp/ollama/models
           {{- with $containerSecurityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
@@ -54,7 +60,7 @@ spec:
               memory: {{ .Values.resources.limits.memory }}
           volumeMounts:
             - name: ollama-data
-              mountPath: /root/.ollama
+              mountPath: /tmp/ollama
       volumes:
         - name: ollama-data
           persistentVolumeClaim:

@@ -10,7 +10,7 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  {{- if not .Values.backend.autoscaling.hpa.enabled }}
+  {{- if and (not .Values.backend.autoscaling.hpa.enabled) (ne .Values.backend.replicaCount nil) }}
   replicas: {{ .Values.backend.replicaCount }}
   {{- end }}
   {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.backend.podLabels .Values.commonLabels ) "context" . ) }}

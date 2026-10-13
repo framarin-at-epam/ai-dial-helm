@@ -48,8 +48,8 @@ image:
   pullSecrets: []
     # - myRegistryKeySecretName
 
-# -- Number of dial-core replicas to deploy
-replicaCount: 1
+# -- Number of dial-core replicas to deploy. Leave unset to allow an external operator to manage .spec.replicas.
+replicaCount: null
 
 containerPorts:
   # -- dial-core HTTP container port
@@ -125,8 +125,6 @@ podSecurityContext:
   sysctls: []
   # -- Set filesystem extra groups
   supplementalGroups: []
-  # -- Set dial-core pod's Security Context fsGroup
-  fsGroup: 1001
 
 # -- Container Security Context Configuration
 # @default -- [Documentation](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container)
@@ -135,10 +133,6 @@ containerSecurityContext:
   enabled: true
   # -- Set dial-core SELinux options in container
   seLinuxOptions: {}
-  # -- Set dial-core container's Security Context runAsUser
-  runAsUser: 1001
-  # -- Set dial-core container's Security Context runAsGroup
-  runAsGroup: 1001
   # -- Set dial-core containers' Security Context runAsNonRoot
   runAsNonRoot: true
   # -- Set dial-core container's Security Context privileged
@@ -653,10 +647,6 @@ logger:
     enabled: true
     # -- Set logger SELinux options in container
     seLinuxOptions: {}
-    # -- Set logger container's Security Context runAsUser
-    runAsUser: 1001
-    # -- Set logger container's Security Context runAsGroup
-    runAsGroup: 1001
     # -- Set logger containers' Security Context runAsNonRoot
     runAsNonRoot: true
     # -- Set logger container's Security Context privileged
@@ -704,6 +694,19 @@ logger:
 valkey:
   # -- Enable/disable Valkey component
   enabled: true
+  # -- Leave unset to allow an external operator to manage the deployment replica count.
+  replicaCount: null
+  # -- OpenShift-compatible security defaults: avoid restricted-v2/v3 UID/GID constraint violations.
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
 
   auth:
     # -- Enable ACL-based authentication. [Helm Authentication](https://github.com/valkey-io/valkey-helm/tree/main/valkey#authentication)

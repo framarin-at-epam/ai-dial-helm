@@ -186,7 +186,6 @@ ollama:
     storageClass: ""
     accessMode: ReadWriteOnce
   podSecurityContext:
-    fsGroup: 1001
     runAsNonRoot: true
     seccompProfile:
       type: RuntimeDefault
@@ -196,7 +195,6 @@ ollama:
       drop:
         - ALL
     runAsNonRoot: true
-    runAsUser: 1001
 
 # "endpoint": "http://dial-openai.dial.svc.cluster.local/openai/deployments/gpt-chat-latest/chat/completions",
 # "responsesEndpoint": "https://foundryimagerecognitiondev.openai.azure.com/openai/v1/responses",
