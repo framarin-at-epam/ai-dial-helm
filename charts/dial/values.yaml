@@ -58,7 +58,7 @@ themes:
   containerSecurityContext:
     enabled: true
     runAsUser: 101
-    runAsGroup: 101
+    readOnlyRootFilesystem: false  # Temporarily disabled due to migration to a new domain. Requires review and removal in the next version.
   livenessProbe:
     enabled: true
   readinessProbe:
