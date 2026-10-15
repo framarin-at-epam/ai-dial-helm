@@ -4,11 +4,17 @@
 
 extraDeploy: []
 
+global:
+  compatibility:
+    openshift:
+      adaptSecurityContext: auto
+
 ### ai-dial-core configuration ###
 core:
   # -- Enable/disable ai-dial-core
   enabled: true
   image:
+    repository: epam/ai-dial-core
     tag: 0.48.0
   livenessProbe:
     enabled: true
@@ -52,6 +58,7 @@ themes:
   containerSecurityContext:
     enabled: true
     runAsUser: 101
+    runAsGroup: 101
   livenessProbe:
     enabled: true
   readinessProbe:

@@ -9,7 +9,7 @@ global:
   compatibility:
     openshift:
       # -- Adapt the securityContext sections of the deployment to make them compatible with Openshift restricted-v2 SCC: remove runAsUser, runAsGroup and fsGroup and let the platform use their allowed default IDs. Possible values: auto (apply if the detected running cluster is Openshift), force (perform the adaptation always), disabled (do not perform adaptation)
-      adaptSecurityContext: disabled
+      adaptSecurityContext: auto
 
 # -- String to partially override common.names.name
 nameOverride: ""
@@ -47,7 +47,7 @@ backend:
     pullSecrets: []
       # - myRegistryKeySecretName
 
-  # -- Number of dial-admin backend replicas to deploy
+  # -- Number of dial-admin backend replicas to deploy. Leave unset to allow an external operator to manage .spec.replicas.
   replicaCount: 1
 
   containerPorts:
@@ -118,8 +118,6 @@ backend:
     sysctls: []
     # -- Set filesystem extra groups
     supplementalGroups: []
-    # -- Set dial-admin backend pod's Security Context fsGroup
-    fsGroup: 1001
 
   # -- Container Security Context Configuration
   # @default -- [Documentation](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container)
@@ -128,10 +126,6 @@ backend:
     enabled: true
     # -- Set dial-admin backend SELinux options in container
     seLinuxOptions: {}
-    # -- Set dial-admin backend container's Security Context runAsUser
-    runAsUser: 1001
-    # -- Set dial-admin backend container's Security Context runAsGroup
-    runAsGroup: 1001
     # -- Set dial-admin backend containers' Security Context runAsNonRoot
     runAsNonRoot: true
     # -- Set dial-admin backend container's Security Context privileged
