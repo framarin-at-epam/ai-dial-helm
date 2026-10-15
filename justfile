@@ -28,10 +28,10 @@ helm-build-dependencies:
 
 helm-install-local-dial-chart:
     @echo "Installing DIAL (local chart)..."
-    @helm install -o yaml dial ./charts/dial/ -f ./deployment/tests/local/values.yaml > logs/output.yaml
+    @helm install -o yaml dial ./charts/dial/ -f ./deployment/tests/openshift/values.yaml > logs/output.yaml
     @echo "DIAL installed successfully."
 
 helm-upgrade-local-dial-chart:
     @echo "Upgrading DIAL (local chart)..."
-    @helm upgrade -o yaml dial ./charts/dial/ -f ./deployment/tests/local/values.yaml > logs/output.yaml
+    @helm upgrade -o yaml dial ./charts/dial/ -f ./deployment/tests/openshift/values.yaml > logs/output.yaml
     @echo "DIAL upgraded successfully."
