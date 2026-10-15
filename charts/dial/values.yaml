@@ -57,7 +57,7 @@ themes:
     fsGroup: 101
   containerSecurityContext:
     enabled: true
-    runAsUser: 101
+    #runAsUser: 101
     readOnlyRootFilesystem: false  # Temporarily disabled due to migration to a new domain. Requires review and removal in the next version.
   livenessProbe:
     enabled: true

@@ -1,3 +1,4 @@
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -44,6 +45,25 @@ def test_valkey_uses_openshift_safe_security_context():
     assert "fsGroup: 1000" not in rendered
     assert "runAsUser: 1000" not in rendered
     assert "runAsGroup: 1000" not in rendered
+
+
+def test_dial_core_renders_without_vendored_valkey_dependency(tmp_path):
+    source = REPO_ROOT / "charts/dial-core"
+    chart_copy = tmp_path / "dial-core"
+    shutil.copytree(source, chart_copy)
+    valkey_dir = chart_copy / "charts" / "valkey"
+    if valkey_dir.exists():
+        shutil.rmtree(valkey_dir)
+
+    result = subprocess.run(
+        ["helm", "template", "dial", str(chart_copy)],
+        capture_output=True,
+        cwd=REPO_ROOT,
+        text=True,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert 'no template "valkey.fullname"' not in result.stderr
 
 
 def test_ollama_uses_writable_home_directory():
