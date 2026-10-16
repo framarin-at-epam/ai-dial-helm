@@ -54,7 +54,8 @@ themes:
   containerPorts:
     http: 8080
   podSecurityContext:
-    fsGroup: 101
+    enabled: true
+    #fsGroup: 101
   containerSecurityContext:
     enabled: true
     #runAsUser: 101

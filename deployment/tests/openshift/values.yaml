@@ -123,6 +123,7 @@ core:
         hosts:
           - dial.localhost #'%%DOMAIN%%'
 
+
 chat:
   enabled: true
   env:
@@ -155,19 +156,24 @@ chat:
         hosts:
           - chat.localhost #'%%DOMAIN%%'
 
+### ai-dial-chat-themes configuration ###
 themes:
-  enabled: true
-  ingress:
-    enabled: true
-    ingressClassName: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: "" #"%%CLUSTER_ISSUER%%"
-    hosts:
-      - themes.localhost #'%%DOMAIN%%'
-    tls:
-      - secretName: "themes-tls-secret"
-        hosts:
-          - themes.localhost #'%%DOMAIN%%'
+  enabled: false #Temporary disabled due to bug: [Nest] 1  - 10/16/2026, 8:04:51 PM     LOG undefined
+                 #                               [Nest] 1  - 10/16/2026, 8:07:16 PM   ERROR [ThemeService] Unexpected error fetching themes: Failed to parse URL from undefined/config.json
+                 #                               TypeError: Failed to parse URL from undefined/config.json
+                 #                               [Nest] 1  - 10/16/2026, 8:07:16 PM   ERROR [Metrics] GET /api/themes 503 - 5ms - Error: Theme service is currently unavailable
+  image:
+    repository: epam/ai-dial-chat-themes
+    tag: 0.20.0
+  # podSecurityContext:
+  #   enabled: true
+  #   fsGroup: null
+  #containerSecurityContext:
+  #  enabled: true
+    #runAsUser: null
+    #runAsGroup: null
+  #  readOnlyRootFilesystem: false  # Temporarily disabled due to migration to a new domain. Requires review and removal in the next version.
+
 
 openai:
   enabled: true
