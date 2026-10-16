@@ -39,8 +39,8 @@ helm-upgrade-local-dial-chart:
 
 oc-chat-port-forward:
     @echo "Chat port forwarding DIAL service..."
-    @oc port-forward svc/dial-chat 3001:80
+    @oc port-forward --address 0.0.0.0 svc/dial-chat 3000:80
 
 oc-core-port-forward:
     @echo "Core port forwarding DIAL service..."
-    @oc port-forward svc/dial-core 8081:80
+    @oc port-forward --address 0.0.0.0 svc/dial-core 8080:80
