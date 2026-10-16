@@ -133,10 +133,10 @@ chat:
     AUTH_POST_LOGOUT_REDIRECT_URI: "http://localhost:3000"
     # -- DIAL core API endpoint
     # Internal service name (DNS name) of DIAL core service
-    DIAL_CORE_URL: "http://dial-core.dial.svc.cluster.local"
+    DIAL_CORE_URL: "dial-core.framarin-at-epam-dev.svc.cluster.local"
     # -- External or Internal URL of DIAL themes;
     # Same allowlist as for DIAL chat should be applied
-    THEMES_CONFIG_HOST: "http://dial-themes.dial.svc.cluster.local"
+    THEMES_CONFIG_URL: "http://dial-themes.framarin-at-epam-dev.svc.cluster.local"
     # -- List of DIAL chat features to enable;
     # ref: https://github.com/epam/ai-dial-chat/blob/development/libs/shared/src/types/features.ts
     ENABLED_FEATURES: "conversations-section,prompts-section,top-settings,top-clear-conversation,top-chat-info,top-chat-model-settings,empty-chat-settings,header,footer,likes,conversations-sharing,prompts-sharing,input-files,attachments-manager,conversations-publishing,prompts-publishing"
@@ -158,10 +158,7 @@ chat:
 
 ### ai-dial-chat-themes configuration ###
 themes:
-  enabled: false #Temporary disabled due to bug: [Nest] 1  - 10/16/2026, 8:04:51 PM     LOG undefined
-                 #                               [Nest] 1  - 10/16/2026, 8:07:16 PM   ERROR [ThemeService] Unexpected error fetching themes: Failed to parse URL from undefined/config.json
-                 #                               TypeError: Failed to parse URL from undefined/config.json
-                 #                               [Nest] 1  - 10/16/2026, 8:07:16 PM   ERROR [Metrics] GET /api/themes 503 - 5ms - Error: Theme service is currently unavailable
+  enabled: true
   image:
     repository: epam/ai-dial-chat-themes
     tag: 0.20.0

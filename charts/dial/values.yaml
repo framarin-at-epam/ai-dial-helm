@@ -41,6 +41,8 @@ chat:
       path: /api/health
     failureThreshold: 6
   resourcesPreset: small
+  env:
+    THEMES_CONFIG_URL: "http://dial-themes.%%NAMESPACE%%.svc.cluster.local"
 
 ### ai-dial-chat-themes configuration ###
 themes:
