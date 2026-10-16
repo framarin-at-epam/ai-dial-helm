@@ -16,6 +16,7 @@
             "ppa": "false"
         }
 	},
+	"forwardPorts": [3001, 8081],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [5000, 5001],
 	// [Optional] To reuse of your local HTTPS dev cert:

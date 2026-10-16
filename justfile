@@ -36,3 +36,11 @@ helm-upgrade-local-dial-chart:
     @helm upgrade -o yaml dial ./charts/dial/ -f ./deployment/tests/openshift/values.yaml > logs/output.yaml
     #With namespace: helm upgrade -i -n dial -o yaml dial dial/dial -f ./deployment/tests/openshift/values.yaml > logs/output.yaml
     @echo "DIAL upgraded successfully."
+
+oc-chat-port-forward:
+    @echo "Chat port forwarding DIAL service..."
+    @oc port-forward svc/dial-chat 3001:80
+
+oc-core-port-forward:
+    @echo "Core port forwarding DIAL service..."
+    @oc port-forward svc/dial-core 8081:80
