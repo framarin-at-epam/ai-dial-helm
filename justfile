@@ -38,9 +38,21 @@ helm-upgrade-local-dial-chart:
     @echo "DIAL upgraded successfully."
 
 oc-chat-port-forward:
-    @echo "Chat port forwarding DIAL service..."
+    @echo "Chat port forwarding service..."
     @oc port-forward --address 0.0.0.0 svc/dial-chat 3000:80
 
 oc-core-port-forward:
-    @echo "Core port forwarding DIAL service..."
+    @echo "Core port forwarding service..."
     @oc port-forward --address 0.0.0.0 svc/dial-core 8080:80
+
+helm-install-local-dial-admin-chart:
+    @echo "Installing DIAL Admin (local chart)..."
+    @helm install dial-admin ./charts/dial-admin -f ./deployment/tests/openshift/dial-admin-values.yaml
+
+helm-upgrade-local-dial-admin-chart:
+    @echo "Upgrading DIAL Admin (local chart)..."
+    @helm upgrade dial-admin ./charts/dial-admin -f ./deployment/tests/openshift/dial-admin-values.yaml
+
+oc-admin-frontend-port-forward:
+    @echo "Admin frontend port forwarding service..."
+    @oc port-forward --address 0.0.0.0 svc/dial-admin-frontend 3000:80
