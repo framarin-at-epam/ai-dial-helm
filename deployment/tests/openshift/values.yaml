@@ -24,6 +24,10 @@ core:
     aidial.identityProviders.fake.rolePath: "roles"
     aidial.identityProviders.fake.issuerPattern: "issuer"
     aidial.storage.prefix: "core"
+  envFrom:
+    - secretRef:
+        name: "foundryimagerecognitiondev.openai.azure.com"
+        key: "ENV_OPENAI_API_KEY"
   secrets:
     aidial.config.json: |
       {
@@ -36,7 +40,7 @@ core:
             "upstreams": [
               {
                 "endpoint": "https://foundryimagerecognitiondev.cognitiveservices.azure.com/openai/deployments/gpt-4.1-nano/chat/completions?api-version=2025-01-01-preview",
-                "key": "<azure_foundry_api_key>"
+                "key": "ENV_OPENAI_API_KEY"
               }
             ],
             "userRoles": ["default", "chat"]
