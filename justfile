@@ -1,3 +1,4 @@
+#Independent Openshift account
 install-oc-cli:
     @echo "Installing OpenShift CLI..."
     @curl -L https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz -o oc.tar.gz
@@ -7,6 +8,21 @@ install-oc-cli:
     @rm oc.tar.gz
     @echo "OpenShift CLI installed successfully."
 
+install-aws-cli:
+    @echo "Installing AWS CLI..."
+    @curl -fsSL https://awscli.amazonaws.com/v2/install.sh | bash
+    @echo "AWS CLI installed successfully."
+
+install-rosa-cli:
+    @echo "Installing ROSA CLI..."
+    @curl -L https://mirror.openshift.com/pub/cgw/rosa/latest/rosa-linux.tar.gz -o rosa.tar.gz
+    @tar -xzf rosa.tar.gz
+    @sudo mv rosa /usr/local/bin/rosa
+    @rosa version
+    @rosa completion fish > ~/.config/fish/completions/rosa.fish
+    @rm rosa.tar.gz
+    @sleep 2
+    @fish
 
 # Helm installation and utility commands
 install-helm:
@@ -16,6 +32,10 @@ install-helm:
     @./get_helm.sh
     @rm ./get_helm.sh
     @mkdir ./logs
+
+install-aws-login:
+    @echo "Login to AWS Console..."
+    @aws configure --remote
 
 helm-uninstall-dial:
     @echo "Uninstalling DIAL..."
