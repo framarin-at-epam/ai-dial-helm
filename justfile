@@ -1,4 +1,3 @@
-#Independent Openshift account
 install-oc-cli:
     @echo "Installing OpenShift CLI..."
     @curl -L https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz -o oc.tar.gz
@@ -33,9 +32,13 @@ install-helm:
     @rm ./get_helm.sh
     @mkdir ./logs
 
-install-aws-login:
+configure-aws-login:
     @echo "Login to AWS Console..."
     @aws configure --remote
+
+rosa-remote-login:
+    @echo "Login to ROSA..."
+    rosa login --use-device-code
 
 helm-uninstall-dial:
     @echo "Uninstalling DIAL..."
