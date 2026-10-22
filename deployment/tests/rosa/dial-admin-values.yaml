@@ -1,0 +1,69 @@
+backend:
+  enabled: true
+  env:
+    #providers.azure.audiences: "%%AZURE_CLIENT_ID%%" # Security configuration
+    CONFIG_REST_SECURITY_MODE: basic # set basic auth
+    ENABLE_CORE_CONFIG_VERSION_AUTO_DETECT: "true"
+    #CORE_CONFIG_VERSION: "%%CORE_CONFIG_VERSION%%"
+
+  secrets:
+    H2_DATASOURCE_MASTERKEY: "15q7kasVf76l/qnqx2CtabTO/Ufoec59" #%%H2_DATASOURCE_MASTERKEY%%"
+    H2_DATASOURCE_ENCRYPTEDFILEKEY: "mBYZB5lJVtTNptx+jqJbloSyTWSDcg9a3uEXK0bAgvJGTX6t/EZMubM+bBNaS7hM3Dhx4A==" #%%H2_DATASOURCE_ENCRYPTEDFILEKEY%%"
+    H2_DATASOURCE_PASSWORD: "I7uOuPdfh82RcskZMkKSBO8E0r5WTdpL" #"%%H2_DATASOURCE_PASSWORD%%"
+
+  configuration:
+    datasourceVendor: "h2"
+    export:
+      namespace: "framarin-at-epam-dev" #"%%CONFIG_EXPORT_NAMESPACE%%"
+      type: "secret"
+      names: ["core-config-secret"]
+      key: "env.config.json"
+
+  diagnosticMode:
+    enabled: true
+    env:
+      DIAGNOSTIC_MODE: "true"
+      DIAGNOSTIC_MODE_OUTPUT_PATH: "/app/data/diagnostic-mode-output"
+      DIAGNOSTIC_MODE_OUTPUT_FORMAT: "json"
+  #containerSecurityContext:
+  #  automountServiceAccountToken: true
+    #runAsGroup: none
+    #runAsUser: none
+    #fsGroup: none
+
+  serviceAccount:
+    automountServiceAccountToken: true
+
+  updateStrategy:
+    type: Recreate
+
+  persistence:
+    enabled: true
+
+frontend:
+  enabled: true
+  env:
+    NEXTAUTH_URL: "http://dial-admin.localhost" #"https://dial-admin.%%DOMAIN%%"
+    DIAL_ADMIN_API_URL: "http://dial-admin-backend.framarin-at-epam-dev.svc.cluster.local"
+    THEMES_CONFIG_HOST: "http://dial-themes.framarin-at-epam-dev.svc.cluster.local" #"%%THEMES_URL%%"
+
+  secrets:
+    NEXTAUTH_SECRET: "p3YHMEdVY/JwPPtniyj90Vdbs2yufWdrjuYvSPSynULcGTQkvrTbg+jmtsVqACf2nUUtZquSUcJSq5pcdBxPUA=="
+    #"%%NEXTAUTH_SECRET%%"
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "" #"%%CLUSTER_ISSUER%%"
+    hosts:
+      - dial-admin.localhost #%%DOMAIN%%
+    tls:
+      - secretName: "dial-admin-tls-secret"
+        hosts:
+          - dial-admin.localhost #%%DOMAIN%%
+
+  global.compatibility.openshift.adaptSecurityContext: true
+
+postgresql:
+  enabled: false

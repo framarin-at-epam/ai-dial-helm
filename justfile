@@ -42,7 +42,7 @@ rosa-remote-login:
 
 helm-uninstall-dial:
     @echo "Uninstalling DIAL..."
-    @helm uninstall dial
+    @helm uninstall dial -n dial
 
 helm-build-dependencies:
     @echo "Building Helm chart dependencies..."
@@ -51,12 +51,12 @@ helm-build-dependencies:
 
 helm-install-local-dial-chart:
     @echo "Installing DIAL (local chart)..."
-    @helm install -o yaml dial ./charts/dial/ -f ./deployment/tests/openshift/values.yaml > logs/output.yaml
+    @helm install -o yaml dial ./charts/dial/ -n dial -f ./deployment/tests/openshift/values.yaml > logs/output.yaml
     @echo "DIAL installed successfully."
 
 helm-upgrade-local-dial-chart:
     @echo "Upgrading DIAL (local chart)..."
-    @helm upgrade -o yaml dial ./charts/dial/ -f ./deployment/tests/openshift/values.yaml > logs/output.yaml
+    @helm upgrade -o yaml dial ./charts/dial/ -n dial -f ./deployment/tests/openshift/values.yaml > logs/output.yaml
     #With namespace: helm upgrade -i -n dial -o yaml dial dial/dial -f ./deployment/tests/openshift/values.yaml > logs/output.yaml
     @echo "DIAL upgraded successfully."
 
@@ -70,11 +70,11 @@ oc-core-port-forward:
 
 helm-install-local-dial-admin-chart:
     @echo "Installing DIAL Admin (local chart)..."
-    @helm install dial-admin ./charts/dial-admin -f ./deployment/tests/openshift/dial-admin-values.yaml
+    @helm install dial-admin ./charts/dial-admin -n dial -f ./deployment/tests/openshift/dial-admin-values.yaml
 
 helm-upgrade-local-dial-admin-chart:
     @echo "Upgrading DIAL Admin (local chart)..."
-    @helm upgrade dial-admin ./charts/dial-admin -f ./deployment/tests/openshift/dial-admin-values.yaml
+    @helm upgrade dial-admin ./charts/dial-admin -n dial -f ./deployment/tests/openshift/dial-admin-values.yaml
 
 oc-admin-frontend-port-forward:
     @echo "Admin frontend port forwarding service..."
