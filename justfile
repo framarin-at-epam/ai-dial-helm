@@ -32,9 +32,9 @@ install-helm:
     @rm ./get_helm.sh
     @mkdir ./logs
 
-configure-aws-login:
+aws-remote-login:
     @echo "Login to AWS Console..."
-    @aws configure --remote
+    @aws login --remote
 
 rosa-remote-login:
     @echo "Login to ROSA..."
