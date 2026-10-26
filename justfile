@@ -40,6 +40,10 @@ rosa-remote-login:
     @echo "Login to ROSA..."
     rosa login --use-device-code
 
+oc-login-to-cluster:
+    @oc login -u cluster-admin -p <cluster-password> https://api.dia
+    l.i9at.p3.openshiftapps.com:443
+
 helm-uninstall-dial:
     @echo "Uninstalling DIAL..."
     @helm uninstall dial -n dial
