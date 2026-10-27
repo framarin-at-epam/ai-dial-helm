@@ -1,12 +1,31 @@
+global:
+  compatibility:
+    openshift:
+      adaptSecurityContext: auto
+
 core:
   enabled: true
   image:
-    repository: ai-dial-core
-    tag: local
-    pullPolicy: Never
+    repository: epam/ai-dial-core
+    tag: 0.48.0
+    #repository: ai-dial-core
+    #tag: local
+    #pullPolicy: Never
   podAnnotations:
     # -- Annotation hack to restart core pod after each Helm chart upgrade
     autorestart: '{{ dateInZone "2006-01-02 15:04:05Z" (now) "UTC" }}'
+  podSecurityContext:
+    enabled: true
+    fsGroup: 1001
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 1001
+    runAsGroup: 1001
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop: ["ALL"]
   configuration:
     encryption:
       secret: "KgmCRB622TJgSJKS7HJgdUM3WuNgs0W4" #"%%CORE_ENCRYPT_SECRET%%"
@@ -71,6 +90,10 @@ core:
         }
       }
   extraVolumes:
+    - name: app-data
+      emptyDir: {}
+    - name: app-logs
+      emptyDir: {}
     - name: config
       secret:
         secretName: '{{ template "dialCore.names.fullname" . }}'
@@ -78,6 +101,10 @@ core:
           - key: aidial.config.json
             path: aidial.config.json
   extraVolumeMounts:
+    - name: app-data
+      mountPath: /app/data
+    - name: app-logs
+      mountPath: /app/log
     - name: config
       mountPath: "/mnt/secrets-store/aidial.config.json"
       subPath: aidial.config.json
@@ -104,25 +131,23 @@ core:
 chat:
   enabled: true
   env:
-    # -- Canonical URL of your site
-    # ref: https://next-auth.js.org/configuration/options#nextauth_url
-    # Browser access is via the forwarded localhost port, while service-to-service communication stays on the cluster DNS.
-    NEXTAUTH_URL: "http://localhost:3000" #'%%DOMAIN%%'
+    # -- Base URL of your site for OAuth callback
+    AUTH_CALLBACK_BASE_URL: "http://localhost:3000"
+    # -- URL to redirect after logout
+    AUTH_POST_LOGOUT_REDIRECT_URI: "http://localhost:3000"
     # -- DIAL core API endpoint
     # Internal service name (DNS name) of DIAL core service
-    DIAL_API_HOST: "http://dial-core.dial.svc.cluster.local"
-    # -- List of DIAL chat features to enable;
-    # ref: https://github.com/epam/ai-dial-chat/blob/development/libs/shared/src/types/features.ts
-    ENABLED_FEATURES: "conversations-section,prompts-section,top-settings,top-clear-conversation,top-chat-info,top-chat-model-settings,empty-chat-settings,header,footer,likes,conversations-sharing,prompts-sharing,input-files,attachments-manager,conversations-publishing,prompts-publishing"
+    DIAL_CORE_URL: "http://dial-core.dial.svc.cluster.local"
     # -- External or Internal URL of DIAL themes;
     # Same allowlist as for DIAL chat should be applied
     THEMES_CONFIG_HOST: "http://dial-themes.dial.svc.cluster.local"
-    #DEFAULT_MODEL: "gpt-chat-latest"
+    # -- List of DIAL chat features to enable;
+    # ref: https://github.com/epam/ai-dial-chat/blob/development/libs/shared/src/types/features.ts
+    ENABLED_FEATURES: "conversations-section,prompts-section,top-settings,top-clear-conversation,top-chat-info,top-chat-model-settings,empty-chat-settings,header,footer,likes,conversations-sharing,prompts-sharing,input-files,attachments-manager,conversations-publishing,prompts-publishing"
+    # -- Default model used by the chat UI.
     DEFAULT_MODEL: "gpt-4.1-nano"
   secrets:
-    NEXTAUTH_SECRET: "YTR8BcAAOlxy56j9+GdzEF5g1brZ0oZ1+jzoF1uYLBHBQQIrlOzpp4yyUCAB2/+No5gJRwVALKG6PLIqIqPCrg==" #"%%NEXTAUTH_SECRET%%"
-    # -- API key defined in core configuration
-    DIAL_API_KEY: "TqACPv6bL5RzW2TftZg7j90zqW2jg24dahPamDQXU1Bkk9S7pB6gW3N0pYp2X5ZR"
+    AUTH_SESSION_SECRET: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
   ingress:
     enabled: true
     ingressClassName: nginx
