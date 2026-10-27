@@ -1,1 +1,0 @@
-helm upgrade -i -n dial -o yaml dial dial/dial -f ./deployment/tests/local/values.yaml > logs/output.yaml

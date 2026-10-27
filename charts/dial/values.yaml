@@ -4,6 +4,11 @@
 
 extraDeploy: []
 
+global:
+  compatibility:
+    openshift:
+      adaptSecurityContext: auto
+
 ### ai-dial-core configuration ###
 core:
   # -- Enable/disable ai-dial-core
@@ -35,6 +40,8 @@ chat:
       path: /api/health
     failureThreshold: 6
   resourcesPreset: small
+  env:
+    THEMES_CONFIG_URL: "http://dial-themes.%%NAMESPACE%%.svc.cluster.local"
 
 ### ai-dial-chat-themes configuration ###
 themes:
@@ -48,10 +55,12 @@ themes:
   containerPorts:
     http: 8080
   podSecurityContext:
-    fsGroup: 101
+    enabled: true
+    #fsGroup: 101
   containerSecurityContext:
     enabled: true
-    runAsUser: 101
+    #runAsUser: 101
+    readOnlyRootFilesystem: false  # Temporarily disabled due to migration to a new domain. Requires review and removal in the next version.
   livenessProbe:
     enabled: true
   readinessProbe:
