@@ -14,8 +14,11 @@
 		"ghcr.io/devcontainers/features/git:1": {
             "version": "latest",
             "ppa": "false"
-        }
-	},
+        },
+    	"ghcr.io/devcontainers/features/node:2.1.1": {
+			"version": "20"
+		}
+  	},
 	"appPort": [ "3001:3000", "8081:8080" ],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [5000, 5001],
@@ -44,6 +47,15 @@
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "dotnet restore",
 	// Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"postCreateCommand": "curl -fsSL https://raw.githubusercontent.com/codemie-ai/codemie-code/main/install/macos/install.sh | bash && codemie doctor",
+	"remoteEnv": {
+		"CODEMIE_URL": "${localEnv:CODEMIE_URL}",
+		"CODEMIE_AUTH_METHOD": "${localEnv:CODEMIE_AUTH_METHOD}",
+		"CODEMIE_JWT_TOKEN": "${localEnv:CODEMIE_JWT_TOKEN}"
+	},
+	"mounts": [
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.codemie,target=/home/vscode/.codemie,type=bind"
+	],
 	"customizations": {
 		"vscode": {
 		"extensions": [
